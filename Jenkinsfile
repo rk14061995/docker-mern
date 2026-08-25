@@ -4,7 +4,7 @@ pipeline{
 		timestamps()
 		disableConcurrentBuilds()
 	}
-	environments{
+	environment{
 		BACKEND_IMAGE= 'rk-task-backend'
 		FRONTEND_IMAGE = 'rk-task-frontend'
 		IMAGE_TAG = "${BUILD_NUMBER}"
@@ -97,8 +97,8 @@ pipeline{
 					docker image inspect ${FRONTEND_IMAGE}:${IMAGE_TAG}
 
 					docker image ls \
-					--filter refrence="${BACKEND_IMAGE}:${IMAGE_TAG}" \
-					--filter refrence="${FRONTEND_IMAGE}:${IMAGE_TAG}"
+					--filter reference="${BACKEND_IMAGE}:${IMAGE_TAG}" \
+					--filter reference="${FRONTEND_IMAGE}:${IMAGE_TAG}"
 				'''
 			}
 		}
