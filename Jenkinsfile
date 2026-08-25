@@ -25,6 +25,7 @@ pipeline{
 					test -f frontend/package.json
 					test -f frontend/Dockerfile
 					test -f docker-compose.yaml
+					test -f docker-compose.ci.yaml
 				'''
 			}
 		}
@@ -101,6 +102,39 @@ pipeline{
 					--filter reference="${BACKEND_IMAGE}:${IMAGE_TAG}" \
 					--filter reference="${FRONTEND_IMAGE}:${IMAGE_TAG}"
 				'''
+			}
+		}
+		stage('Prepare CI Environment'){
+			steps{
+				writeFile(
+					file: '.ci-mongo-password'
+					test: 'jenkins-ci-password'
+				)
+				sh '''
+					chmod 600 .ci-mongo-password
+					docker compose -f docker-compose.ci.yaml config --quiet
+				'''
+			}
+		}
+		stage('Start Test Containers'){
+			steps{
+				sh '''
+					docker compose -f docker-compose.ci.yaml up -d --wait --wait-timeout 120
+				'''
+			}
+		}
+		stage('Check Container Status'){
+			steps{
+				sh '''
+					docker compose \
+					-f docker-compose.ci.yaml \
+					ps
+				'''
+			}
+		}
+		stage('Test Backed Container'){
+			steps{
+				echo " Test is pending"
 			}
 		}
 	}
