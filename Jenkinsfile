@@ -107,8 +107,8 @@ pipeline{
 		stage('Prepare CI Environment'){
 			steps{
 				writeFile(
-					file: '.ci-mongo-password'
-					test: 'jenkins-ci-password'
+					file: '.ci-mongo-password',
+					text: 'jenkins-ci-password'
 				)
 				sh '''
 					chmod 600 .ci-mongo-password
