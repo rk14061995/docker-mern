@@ -8,6 +8,7 @@ pipeline{
 		BACKEND_IMAGE= 'rk-task-backend'
 		FRONTEND_IMAGE = 'rk-task-frontend'
 		IMAGE_TAG = "${BUILD_NUMBER}"
+		COMPOSE_PROJECT_IMAGE = "mern-ci-${BUILD_NUMBER}"
 	}
 	stages{
 		stage('Checkout'){
