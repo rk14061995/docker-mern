@@ -111,7 +111,7 @@ pipeline{
 					text: 'jenkins-ci-password'
 				)
 				sh '''
-					chmod 600 .ci-mongo-password
+					chmod 644 .ci-mongo-password
 					docker compose -f docker-compose.ci.yaml config --quiet
 				'''
 			}
