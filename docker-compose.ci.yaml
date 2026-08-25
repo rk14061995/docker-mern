@@ -12,13 +12,13 @@ services:
       test:
         [
           "CMD-SHELL",
-          "mongosh --quite --username admin --password \"$$(cat /run/secrets/mongo_password)\" --authenticationDatabase admin --eval \"ok.adminCommand('ping').ok \" | grep 1"
+          "mongosh --quiet --username admin --password \"$$(cat /run/secrets/mongo_password)\" --authenticationDatabase admin --eval \"db.adminCommand('ping').ok\" | grep 1"
         ]
       interval: 5s
       timeout: 5s
       retries: 10
-      start_period: 10a
-  
+      start_period: 10s
+
   backend:
     image: "${BACKEND_IMAGE}:${IMAGE_TAG}"
     environment:
@@ -40,7 +40,7 @@ services:
           "CMD",
           "node",
           "-e",
-          "featch('http://localhost:5000').then(r => {if(!r.ok) process.exit(1)}).catch(err => process.exit(1))"
+          "fetch('http://localhost:5000/health').then(r => {if(!r.ok) process.exit(1)}).catch(err => process.exit(1))"
         ]
       interval: 5s
       timeout: 5s
@@ -56,6 +56,7 @@ services:
       test:
         [
           "CMD",
+          "node",
           "-e",
           "fetch('http://localhost:5173').then(r => {if(!r.ok) process.exit(1)}).catch(err => process.exit(1))"
         ]
@@ -63,7 +64,7 @@ services:
       timeout: 5s
       retries: 10
       start_period: 10s
-  
-  secrets:
-    mongo_password:
-      file: ./.ci-mongo-password
+
+secrets:
+  mongo_password:
+    file: ./.ci-mongo-password
