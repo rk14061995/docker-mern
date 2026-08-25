@@ -20,9 +20,9 @@ pipeline{
 			steps{
 				sh '''
 					test -f backend/package.json
-					test -f backend/Dockerfile
+					test -f backend/dockerfile
 					test -f frontend/package.json
-					test -f frontend/Dockerfile
+					test -f frontend/dockerfile
 					test -f docker-compose.yaml
 				'''
 			}
