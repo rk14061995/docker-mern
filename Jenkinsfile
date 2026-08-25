@@ -2,7 +2,7 @@ pipeline{
 	agent any
 	options{
 		timestamps()
-		disableConcurrentBuidls()
+		disableConcurrentBuilds()
 	}
 	stages{
 		stage('Checkout'){
