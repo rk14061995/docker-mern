@@ -7,7 +7,7 @@ services:
     secrets:
       - mongo_password
     tmpfs:
-      - data/db
+      - /data/db
     healthcheck:
       test:
         [
