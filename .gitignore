@@ -1,0 +1,32 @@
+# .env
+# secrets
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+secrets/
+*.secret
+
+# Dependencies
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Build output
+dist/
+build/
+frontend/dist/
+.next/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
+
+# Downloaded packages
+*.deb
