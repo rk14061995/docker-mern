@@ -163,6 +163,14 @@ pipeline{
 			echo "Pipeline failed, Docker image will not be deployed"
 		}
 		always {
+			echo "Stopping and removing CI Containers.."
+			sh '''
+				docker compose \
+				-f docker-compose.ci.yaml \
+				down --volumes --remove-orphans || true
+
+				rm -f .ci-mongo-password
+			'''
 			echo "Pipeline finished with status: ${currentBuild.currentResult}"
 		}
 	}
