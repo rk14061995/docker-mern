@@ -137,10 +137,10 @@ pipeline{
 				echo " Testing Backend Health Point"
 				sh '''
 					docker compose \
-					-f docker.compose.ci.yaml \
-					exec -T bakend \
+					-f docker-compose.ci.yaml \
+					exec -T backend \
 					node -e "
-						fetch().then(async response =>{ 
+						fetch('http://localhost:5000/health').then(async response =>{
 								console.log('Status: ', response.status); 
 								console.log('Response : ',await response.text());
 								if(!response.ok){
