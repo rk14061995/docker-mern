@@ -9,6 +9,7 @@ pipeline{
 		FRONTEND_IMAGE = 'rk-task-frontend'
 		IMAGE_TAG = "${BUILD_NUMBER}"
 		COMPOSE_PROJECT_IMAGE = "mern-ci-${BUILD_NUMBER}"
+		DOCKERHUB_NAMESPACE = 'rk14061995'
 		DOCKERHUB_USRENAME = 'rk14061995'
 	}
 	stages{
@@ -196,6 +197,20 @@ pipeline{
 						
 					'''
 				}
+			}
+		}
+		stage('Tag Docker Image'){
+			steps{
+				echo "Tagging Docker Images for Docker HUB.."
+				sh '''
+					docker tag \
+					${BACKEND_IMAGE}:${IMAGE_TAG} \
+					${DOCKERHUB_NAMESPACE}/${BACKEND_IMAGE}:${IMAGE_TAG} 
+
+					docker tag \
+					${FRONTEND_IMAGE}:${IMAGE_TAG} \
+					${DOCKERHUB_NAMESPACE}/${FRONTEND_IMAGE}:${IMAGE_TAG}
+				'''
 			}
 		}
 	}
