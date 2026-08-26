@@ -132,9 +132,26 @@ pipeline{
 				'''
 			}
 		}
-		stage('Test Backed Container'){
+		stage('Test Backend Container'){
 			steps{
-				echo " Test is pending"
+				echo " Testing Backend Health Point"
+				sh '''
+					docker compose \
+					-f docker.compose.ci.yaml \
+					exec -T bakend \
+					node -e "
+						fetch().then(async response =>{ 
+								console.log('Status: ', response.status); 
+								console.log('Response : ',await response.text());
+								if(!response.ok){
+									process.exit(1);
+								}
+							}).catch(error => { 
+								console.error('Backend Test Failed: ', error); 
+								process.exit(1)
+							});
+					"
+				'''
 			}
 		}
 	}
