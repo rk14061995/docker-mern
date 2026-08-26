@@ -224,6 +224,28 @@ pipeline{
 				'''
 			}
 		}
+		stage('Deploy Application'){
+			steps{
+				echo "Deploying Application Version : ${IMAGE_TAG}"
+				withCredentials([
+					string(
+						credentialsId:'mongo-production-password',
+						variable:'MONGO_PRODUCTION_PASSWORD'
+					)
+				]){
+					sh '''
+						mkdir -p secrets
+						printf '%s' "$MONGO_PRODUCTION_PASSWORD" > secrets/mongo_password.txt
+
+						chmod 644 secrets/mongo_password.txt
+
+						docker compose -p mern-jenkins-prod -f docker-compose.deploy.yaml pull
+	
+						docker compose -p mern-jenkins-prod -f docker-compose.deploy.yaml up -d --wait --wait-timeout=120
+					'''
+				}
+			}
+		}
 	}
 	post {
 		success {

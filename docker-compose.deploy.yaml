@@ -73,4 +73,4 @@ volumes:
 
 secrets:
   mongo_password:
-    file: ./.ci-mongo-password
+    file: ./secrets/mongo_password.txt
