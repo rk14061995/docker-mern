@@ -213,10 +213,21 @@ pipeline{
 				'''
 			}
 		}
+		stage('Push Docker Image'){
+			steps{
+				echo "Pushing Docker Images to Docker Hub .."
+				sh '''
+					docker push \
+					${DOCKERHUB_NAMESPACE}/${BACKEND_IMAGE}:${IMAGE_TAG}
+					docker push \
+					${DOCKERHUB_NAMESPACE}/${FRONTEND_IMAGE}:${IMAGE_TAG}
+				'''
+			}
+		}
 	}
 	post {
 		success {
-			echo "DOCKER images build successfully with ${IMAGE_TAG}"
+			echo "DOCKER images ${IMAGE_TAG} was built and successfully pushed."
 		}
 		failure {
 			echo "Pipeline failed, Docker image will not be deployed"
