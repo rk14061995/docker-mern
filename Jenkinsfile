@@ -9,6 +9,7 @@ pipeline{
 		FRONTEND_IMAGE = 'rk-task-frontend'
 		IMAGE_TAG = "${BUILD_NUMBER}"
 		COMPOSE_PROJECT_IMAGE = "mern-ci-${BUILD_NUMBER}"
+		DOCKERHUB_USRENAME = 'rk14061995'
 	}
 	stages{
 		stage('Checkout'){
@@ -152,6 +153,49 @@ pipeline{
 							});
 					"
 				'''
+			}
+		}
+		stage('Test FE Container'){
+			steps{
+				echo "Testing Frontend Health"
+				sh '''
+					docker compose \
+					-f docker-compose.ci.yaml \
+					exec -T frontend \
+					node -e "
+						fetch('http://localhost:5173').then(async response => {
+							console.log('Status : ',response.status);
+							console.log('Result :', await response.text());
+							if(!response.ok){
+								process.exit(1);
+							}
+						}).catch(error=>{
+							console.error('Frontend Test Failed: ',error);
+							process.exit(1);
+						})
+					"
+				'''
+			}
+		}
+		stage('Login To Docker HUB'){
+			steps{
+				echo "Loggining in to docker hub ..."
+				withCredentials([
+					usernamePassword(
+						credentialsId: 'dockerhub-credentials',
+						usernameVariable: 'DOCKERHUB_USER',
+						passwordVariable: 'DOCKERHUB_TOKEN'
+					)
+				]){
+					sh '''
+						echo "$DOCKERHUB_TOKEN" |
+						docker login \
+							--username "$DOCKERHUB_USER" \
+							--password-stdin
+
+						
+					'''
+				}
 			}
 		}
 	}
